@@ -17,19 +17,23 @@ class TodoService(
         return todo
     }
 
-    fun toggle(id: Long)  {
+    fun toggle(id: Long): Boolean  {
         if (repository.existsById(id)) {
             val todo = repository.findById(id).get()
             todo.completed = todo.completed.not()
             repository.save(todo)
             publisher.publish(repository.findAll().toList())
+            return true
         }
+        return false
     }
 
-    fun delete(id: Long) {
+    fun delete(id: Long): Boolean {
         if (repository.existsById(id)) {
             repository.deleteById(id)
             publisher.publish(repository.findAll().toList())
+            return true
         }
+        return false
     }
 }
